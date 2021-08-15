@@ -1,0 +1,109 @@
+class MyHashMap<K,V> {
+    
+    final ListNode<K, V>[] nodes= new ListNode[100000];
+    
+    class ListNode<K,V>
+    {
+        K key;
+        V value;
+        ListNode<K,V> next;
+        
+        public ListNode(K key, V value)
+        {
+           this.key = key;
+           this.value = value;
+        }
+        
+    }
+    
+    public int getHashCode(K key)
+    {
+        return key.hashCode()%nodes.length;
+    }
+
+    /** Initialize your data structure here. */
+    public MyHashMap() {
+        
+    }
+    
+    /** value will always be non-negative. */
+    public void put(K key, V value) {
+        
+        int hash = getHashCode(key);
+        
+        if(nodes[hash] == null)
+        {
+            nodes[hash] = new ListNode(-1,-1);
+        }
+        
+        ListNode prev = findElement(key, nodes[hash]);
+        
+        if(prev.next == null)
+        {
+            prev.next = new ListNode(key,value);
+        }
+        else
+        {
+            prev.next.value = value;
+        }
+        
+    }
+    
+    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+    public V get(K key) {
+        
+        int hash = getHashCode(key);
+        
+        if(nodes[hash] ==null)
+            return null;;
+        
+        ListNode<K,V> prev = findElement(key,nodes[hash]);
+        
+        if(prev.next == null)
+            return null;;
+        
+        return prev.next.value;
+        
+    }
+    
+    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+    public void remove(K key) {
+        int hash = getHashCode(key);
+        
+        
+        if(nodes[hash]==null)
+            return;
+        
+        ListNode prev = findElement(key,nodes[hash]);
+        
+        if(prev.next == null)
+            return;
+        else
+        {
+            prev.next = prev.next.next;
+        }
+    }
+    
+    
+    public ListNode findElement(K key, ListNode head)
+    {
+        ListNode curr = head;
+        ListNode prev = null;
+        
+        if(curr!=null && curr.key!=key)
+        {
+            prev = curr;
+            curr = curr.next;
+        }
+        return prev;
+    }
+    
+    public static void main(String[] args)
+    {
+      MyHashMap<Integer,Integer> obj = new MyHashMap<>();
+      obj.put(1,2);
+      int param_2 = obj.get(1);
+      System.out.println(param_2);  
+      obj.remove(1);
+    }
+}
